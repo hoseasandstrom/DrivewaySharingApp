@@ -1,0 +1,126 @@
+$primary-yellow: #E1B80D;
+$primary-offwht: #FEF3E2;
+$primary-red: #FA4032;
+$primary-orange: #FA812F;
+
+
+::-webkit-input-placeholder { color: $primary-offwht; opacity: 1 !important; }
+:-moz-placeholder { color: #333333;}
+::-moz-placeholder {color: #333333;}
+:-ms-input-placeholder {color: #333333;}
+
+.row {
+  max-width: 1200px;
+}
+
+.footer {
+  margin-top: 1em;
+  background-color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 1rem;
+
+  .social a {
+    display: inline-block;
+    width: 3rem;
+    height: 2rem;
+    background-color: white;
+    border-radius: 2px;
+    font-size: 1.5rem;
+    color: $primary-red;
+    text-align: center;
+    line-height: 2rem;
+    margin: 0 3px 0 0;
+  }
+
+
+  .copywrite {
+    color: $primary-red;
+    font-size: 0.875rem;
+    margin: 1rem 0 1rem 0;
+  }
+
+  .footer-form {
+    textarea, input {
+      border-radius: 3px;
+      // background-color: white;
+      // box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
+      border: $primary-red;
+      resize: none;
+      font: inherit;
+      font-size: 0.975rem;
+      font-weight: normal;
+      color: $primary-red;
+      padding: 1.3rem;
+    }
+
+
+    label {
+      color: $primary-red;
+      font-size: 1.2rem;
+      margin: 0 0 1rem 0;
+      font-weight: bold;
+    }
+
+    .submit {
+      border-radius: 3px;
+      background-color: $primary-red;
+      color: white;
+      border: 0;
+      padding: 1rem 3.5rem;
+      font-weight: bold;
+      float: right;
+      margin: 0 1rem 2rem 0;
+    }
+  }
+
+  .footer-links a {
+    list-style: none;
+    font-weight: normal;
+    color: $primary-red;
+    padding: 3rem 0 2rem;
+    margin: 0;
+    font-size: 0.875rem;
+
+    &::after {
+      content: "•";
+      padding: 0 0.2rem 0 0.4rem;
+    }
+
+    &:last-child::after {
+      content: "";
+      padding: 0 0.4rem 0 0.8rem;
+    }
+  }
+
+  @media only screen and (min-width: 40.063em) {
+    padding: 4rem;
+
+    p {
+      text-align: left;
+    }
+
+    .social {
+      text-align: left;
+      margin: 0;
+    }
+
+    .footer-form {
+      .contact {
+        position: absolute;
+        left: -45%;
+        top: 10%;
+      }
+    }
+
+  }
+}
+
+.logo {
+  color: $primary-red;
+  font-size: 1.5rem;
+
+  i {
+    margin-right: 0.5rem;
+  }
+}
