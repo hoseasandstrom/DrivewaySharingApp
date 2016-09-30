@@ -19,7 +19,7 @@ public class Driveway {
     int id;
 
     @Column (nullable = false)
-    String location;
+    String address;
 
     @Column (nullable = false)
     int price;
@@ -30,8 +30,8 @@ public class Driveway {
     public Driveway() {
     }
 
-    public Driveway(String location, int price, String description) {
-        this.location = location;
+    public Driveway(String address, int price, String description) {
+        this.address = address;
         this.price = price;
         this.description = description;
     }
@@ -44,12 +44,12 @@ public class Driveway {
         this.id = id;
     }
 
-    public String getLocation() {
-        return location;
+    public String getaddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setaddress(String address) {
+        this.address = address;
     }
 
     public int getPrice() {
