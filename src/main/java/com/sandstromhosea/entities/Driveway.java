@@ -27,6 +27,12 @@ public class Driveway {
     @Column (nullable = false)
     String description;
 
+    @Column (nullable = false)
+    Double lat;
+
+    @Column (nullable = false)
+    Double lng;
+
     public Driveway() {
     }
 
@@ -34,6 +40,14 @@ public class Driveway {
         this.address = address;
         this.price = price;
         this.description = description;
+    }
+
+    public Driveway(String address, int price, String description, Double lat, Double lng) {
+        this.address = address;
+        this.price = price;
+        this.description = description;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public int getId() {
@@ -66,5 +80,29 @@ public class Driveway {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 }
