@@ -1,0 +1,19 @@
+{
+  "name": "drivewaysharingapp",
+  "version": "1.0.0",
+  "description": "drivewaysharingapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoseasandstrom/DrivewaySharingApp.git"
+  },
+  "author": "Hosea Sandstrom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoseasandstrom/DrivewaySharingApp/issues"
+  },
+  "homepage": "https://github.com/hoseasandstrom/DrivewaySharingApp#readme"
+}
