@@ -1,39 +1,42 @@
-'use strict'
-
+// Include gulp
 var gulp = require('gulp');
-var watch = require('gulp-watch');
+
+// Include Our Plugins
+var jshint = require('gulp-jshint');
 var sass = require('gulp-sass');
-var browserify = require('gulp-browserify');
-var minify = require('gulp-minify');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
 
-gulp.task('default', ['html', 'js', 'css'])
-
-gulp.task('html', function(){
-  gulp.src('./templates/*.html')
-    .pipe(gulp.dest('./public/templates'));
-
-  return gulp.src('./index.html')
-    .pipe(gulp.dest('./public'));
+// Lint Task
+gulp.task('lint', function() {
+    return gulp.src('js/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
-
-gulp.task('js', function(){
-  gulp.src('./js/app.js')
-    .pipe(browserify())
-    .pipe(gulp.dest('./public/js'))
+// Compile Our Sass
+gulp.task('sass', function() {
+    return gulp.src('scss/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('css', function(){
-  gulp.src('./scss/styles.scss')
-    .pipe(sass())
-    .pipe(gulp.dest('./public/css'))
+// Concatenate & Minify JS
+gulp.task('scripts', function() {
+    return gulp.src('js/*.js')
+        .pipe(concat('all.js'))
+        .pipe(gulp.dest('dist'))
+        .pipe(rename('all.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('watch', function(){
-  gulp.watch('./index.html', ['html'])
-  gulp.watch('./templates/*.html', ['html'])
-  gulp.watch('./templates/*/*.html', ['html'])
-  gulp.watch('./js/*.js', ['js'])
-  gulp.watch('./js/*/*.js', ['js'])
-  gulp.watch('./scss/*.scss', ['css'])
-})
+// Watch Files For Changes
+gulp.task('watch', function() {
+    gulp.watch('js/*.js', ['lint', 'scripts']);
+    gulp.watch('scss/*.scss', ['sass']);
+});
+
+// Default Task
+gulp.task('default', ['lint', 'sass', 'scripts', 'watch']);
