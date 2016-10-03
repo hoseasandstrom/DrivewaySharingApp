@@ -76,22 +76,22 @@ public class DriveWaySharingAppController {
 
     Iterable<Driveway> drives = driveways.findAll();
         for (Driveway drive : drives) {
-        if (drive.getAddress() == null || drive.getLat() == null || drive.getLng() == null){
-            GeoApiContext context = new GeoApiContext()
-                    .setApiKey(" ");
-            TextSearchRequest request = PlacesApi.textSearchQuery(context, drive.getAddressInput() + " Charleston");
-            PlacesSearchResponse results = request.await();
-            if (drive.getLat() == null){
-                drive.setLat(results.results[0].geometry.location.lat);
+            if (drive.getAddress() == null || drive.getLat() == null || drive.getLng() == null){
+                GeoApiContext context = new GeoApiContext()
+                        .setApiKey(" ");
+                TextSearchRequest request = PlacesApi.textSearchQuery(context, drive.getAddressInput() + " Charleston");
+                PlacesSearchResponse results = request.await();
+                if (drive.getLat() == null){
+                    drive.setLat(results.results[0].geometry.location.lat);
+                }
+                if (drive.getLng() == null ) {
+                    drive.setLng(results.results[0].geometry.location.lng);
+                }
+                if (drive.getAddress() == null) {
+                    drive.setAddress(results.results[0].formattedAddress);
+                }
+                driveways.save(drive);
             }
-            if (drive.getLng() == null ) {
-                drive.setLng(results.results[0].geometry.location.lng);
-            }
-            if (drive.getAddress() == null) {
-                drive.setAddress(results.results[0].formattedAddress);
-            }
-            driveways.save(drive);
-        }
     }
 
     //user and password check(passwords are hashed)
