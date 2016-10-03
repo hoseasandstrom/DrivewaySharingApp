@@ -390,10 +390,6 @@ h1 {
   background-color: #2c3940;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3); }
 
-@font-face {
-  font-family: TheWildThingsScript;
-  src: url("../TheWildThingsScript/TheWildThingsScript.otf"); }
-
 body {
   background-color: rgba(162, 162, 162, 0.2);
   font-family: WildThings, sans-serif; }
