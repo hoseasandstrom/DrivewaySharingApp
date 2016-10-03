@@ -1,6 +1,5 @@
 package com.sandstromhosea.entities;
 
-
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.Column;
@@ -19,13 +18,16 @@ public class Driveway {
     int id;
 
     @Column (nullable = false)
-    String address;
+    String addressInput;
 
     @Column (nullable = false)
-    int price;
+    String price;
 
     @Column (nullable = false)
     String description;
+
+    @Column
+    String address;
 
     @Column (nullable = false)
     Double lat;
@@ -36,18 +38,24 @@ public class Driveway {
     public Driveway() {
     }
 
-    public Driveway(String address, int price, String description) {
-        this.address = address;
-        this.price = price;
-        this.description = description;
+    public Driveway(int id, String addressInput) {
+        this.id = id;
+        this.addressInput = addressInput;
     }
 
-    public Driveway(String address, int price, String description, Double lat, Double lng) {
-        this.address = address;
+    public Driveway(String addressInput, String price, String description, String address, Double lat, Double lng) {
+        this.addressInput = addressInput;
         this.price = price;
         this.description = description;
+        this.address = address;
         this.lat = lat;
         this.lng = lng;
+    }
+
+    public Driveway(String addressInput, String price, String description) {
+        this.addressInput = addressInput;
+        this.price = price;
+        this.description = description;
     }
 
     public int getId() {
@@ -58,19 +66,19 @@ public class Driveway {
         this.id = id;
     }
 
-    public String getaddress() {
-        return address;
+    public String getAddressInput() {
+        return addressInput;
     }
 
-    public void setaddress(String address) {
-        this.address = address;
+    public void setAddressInput(String addressInput) {
+        this.addressInput = addressInput;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

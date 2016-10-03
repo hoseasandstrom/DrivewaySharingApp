@@ -1,31 +1,36 @@
 package com.sandstromhosea.controllers;
 
-
+import com.google.maps.*;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.TextSearchRequest;
 import com.google.maps.model.PlacesSearchResponse;
+
 import com.sandstromhosea.entities.Driveway;
 import com.sandstromhosea.entities.User;
 import com.sandstromhosea.services.DrivewayRepository;
 import com.sandstromhosea.services.UserRepository;
 import com.sandstromhosea.utils.PasswordStorage;
-import org.h2.tools.Server;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.driveController;
+import org.h2.tools.Server;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
  * Created by hoseasandstrom on 9/30/16.
  */
-@RestController
+@driveController
 public class DriveWaySharingAppController {
     @Autowired
     UserRepository users;
@@ -33,26 +38,59 @@ public class DriveWaySharingAppController {
     @Autowired
     DrivewayRepository driveways;
 
+    String APIkey = APIreader();
 
-    if (driveways.count() == 0) {
-        String filename = "Driveways.csv";
-        File f = new File(filename);
-        Scanner filescanner = new Scanner(f);
-        filescanner.nextLine();
-        while (filescanner.hasNext()) {
-            String line = filescanner.nextLine();
-            String[] columns = line.split("\\,");
+    public DriveWaySharingAppController() throws Exception {
+
+    }
+
+    @PostConstruct
+    public void init() throws Exception {
+        Server.createWebServer();
+    }
+
+    //creating driveways table
+           if (driveways.count() == 0) {
+            String filename = "Driveways.csv";
+            File f = new File(filename);
+            Scanner filescanner = new Scanner(f);
+            filescanner.nextLine();
+            while (filescanner.hasNext()) {
+                String line = filescanner.nextLine();
+                String[] columns = line.split("\\,");
+                GeoApiContext context = new GeoApiContext()
+                        .setApiKey(APIkey);
+                TextSearchRequest request = PlacesApi.textSearchQuery(context, columns[2] + " Charleston");
+                PlacesSearchResponse results = request.await();
+
+
+                Driveway driveway = new Driveway(columns[0],
+                        columns[1],
+                        columns[2],
+                        results.results[0].formattedAddress,
+                        results.results[0].geometry.location.lat,
+                        results.results[0].geometry.location.lng);
+                driveways.save(driveway);
+        }
+    }
+
+    Iterable<Driveway> drives = driveways.findAll();
+        for (Driveway drive : drives) {
+        if (drive.getAddress() == null || drive.getLat() == null || drive.getLng() == null){
             GeoApiContext context = new GeoApiContext()
-                    .setApiKey(APIKey);
-            TextSearchRequest request = PlacesApi.textSearchQuery(context, columns[2] + " Charleston");
+                    .setApiKey(" ");
+            TextSearchRequest request = PlacesApi.textSearchQuery(context, drive.getAddressInput() + " Charleston");
             PlacesSearchResponse results = request.await();
-
-            Driveway driveway = new Driveway(columns[0],
-                    columns[1],
-                    columns(Integer.valueOf()[2],
-                    results.results[0].geometry.location.lat,
-                    results.results[0].geometry.location.lng);
-            driveways.save(driveway);
+            if (drive.getLat() == null){
+                drive.setLat(results.results[0].geometry.location.lat);
+            }
+            if (drive.getLng() == null ) {
+                drive.setLng(results.results[0].geometry.location.lng);
+            }
+            if (drive.getAddress() == null) {
+                drive.setAddress(results.results[0].formattedAddress);
+            }
+            driveways.save(drive);
         }
     }
 
@@ -79,11 +117,27 @@ public class DriveWaySharingAppController {
         }
     }
 
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public void logout(HttpSession session, HttpServletResponse response) throws IOException {
+        session.invalidate();
+        response.sendRedirect("/");
+    }
+
     @RequestMapping(path="/users", method = RequestMethod.GET)
     public Iterable<User> getUsers () {
         return users.findAll();
     }
 
+    @RequestMapping (path = "/driveways", method = RequestMethod.GET)
+    public Iterable<Driveway> getDrives () {
 
+        return driveways.findAll();
+    }
+
+    public String APIreader () throws FileNotFoundException {
+        File file = new File("API.csv");
+        Scanner fscan  = new Scanner(file);
+        return fscan.nextLine();
+    }
 
 }
