@@ -7,8 +7,10 @@ import com.google.maps.TextSearchRequest;
 import com.google.maps.model.PlacesSearchResponse;
 
 import com.sandstromhosea.entities.Driveway;
+import com.sandstromhosea.entities.Park;
 import com.sandstromhosea.entities.User;
 import com.sandstromhosea.services.DrivewayRepository;
+import com.sandstromhosea.services.ParkRepository;
 import com.sandstromhosea.services.UserRepository;
 import com.sandstromhosea.utils.PasswordStorage;
 
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.driveController;
 import org.h2.tools.Server;
 import javax.annotation.PostConstruct;
@@ -25,18 +28,22 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
  * Created by hoseasandstrom on 9/30/16.
  */
-@driveController
+@RestController
 public class DriveWaySharingAppController {
     @Autowired
     UserRepository users;
 
     @Autowired
     DrivewayRepository driveways;
+
+    @Autowired
+    ParkRepository parkingSpots;
 
     String APIkey = APIreader();
 
@@ -121,6 +128,40 @@ public class DriveWaySharingAppController {
     public void logout(HttpSession session, HttpServletResponse response) throws IOException {
         session.invalidate();
         response.sendRedirect("/");
+    }
+
+    @RequestMapping(path = "/parkingspots", method = RequestMethod.POST)
+
+    public void addItinerary(HttpSession session, @RequestBody HashMap data) throws Exception {
+        String username = (String) session.getAttribute("username");
+        if (username == null) {
+            throw new Exception("You must be registered");
+        }
+
+        Park park = new Park();
+        User user = users.findByUsername(username);
+        String addressInput = (String) data.get("addressInput");
+        Driveway temp = driveways.findFirstByAddressInput(addressInput);
+        if (driveways.findFirstByAddressInput(addressInput)==null) {
+            park.setDrive(false);
+            int id = (int) data.get("id");
+            park.setEventId(id);
+            park.setUsers(user);
+            Park spots = parkingSpots.findFirstByEventid(id);
+            if (spots==null || spots.getUsers() != park.getUsers()) {
+                parkingSpots.save(park);
+            }
+        } else {
+            park.setDrive(true);
+            int id = (int) data.get("id");
+            park.setEventId(id);
+            park.setUsers(user);
+            Park spots = parkingSpots.findFirstByEventid(id);
+            if (spots==null || spots.getUsers() != spots.getUsers()) {
+                parkingSpots.save(park);
+            }
+        }
+
     }
 
     @RequestMapping(path="/users", method = RequestMethod.GET)

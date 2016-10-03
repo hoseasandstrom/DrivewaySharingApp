@@ -15,10 +15,21 @@ public class Park {
     @Column
     int eventId;
 
+    @Column
+    boolean isDrive;
+
     @ManyToOne
     User users;
 
     public Park() {
+    }
+
+    public boolean isDrive() {
+        return isDrive;
+    }
+
+    public void setDrive(boolean drive) {
+        isDrive = drive;
     }
 
     public Park(int id, int eventId, User users) {
@@ -29,6 +40,12 @@ public class Park {
 
     public Park(int eventId, User users) {
         this.eventId = eventId;
+        this.users = users;
+    }
+
+    public Park(int eventId, boolean isDrive, User users) {
+        this.eventId = eventId;
+        this.isDrive = isDrive;
         this.users = users;
     }
 
