@@ -1,11 +1,6 @@
 package com.sandstromhosea.entities;
 
-import org.springframework.data.annotation.Id;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by hoseasandstrom on 9/30/16.
@@ -18,7 +13,7 @@ public class Driveway {
     int id;
 
     @Column (nullable = false)
-    String addressInput;
+    String name;
 
     @Column (nullable = false)
     String price;
@@ -38,13 +33,13 @@ public class Driveway {
     public Driveway() {
     }
 
-    public Driveway(int id, String addressInput) {
+    public Driveway(int id, String name) {
         this.id = id;
-        this.addressInput = addressInput;
+        this.name = name;
     }
 
-    public Driveway(String addressInput, String price, String description, String address, Double lat, Double lng) {
-        this.addressInput = addressInput;
+    public Driveway(String name, String price, String description, String address, Double lat, Double lng) {
+        this.name = name;
         this.price = price;
         this.description = description;
         this.address = address;
@@ -52,8 +47,8 @@ public class Driveway {
         this.lng = lng;
     }
 
-    public Driveway(String addressInput, String price, String description) {
-        this.addressInput = addressInput;
+    public Driveway(String name, String price, String description) {
+        this.name = name;
         this.price = price;
         this.description = description;
     }
@@ -66,12 +61,12 @@ public class Driveway {
         this.id = id;
     }
 
-    public String getAddressInput() {
-        return addressInput;
+    public String getname() {
+        return name;
     }
 
-    public void setAddressInput(String addressInput) {
-        this.addressInput = addressInput;
+    public void setname(String name) {
+        this.name = name;
     }
 
     public String getPrice() {
