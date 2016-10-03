@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.driveController;
 import org.h2.tools.Server;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
@@ -81,23 +80,23 @@ public class DriveWaySharingAppController {
         }
     }
 
-    Iterable<Driveway> drives = driveways.findAll();
-        for (Driveway drive : drives) {
-            if (drive.getAddress() == null || drive.getLat() == null || drive.getLng() == null){
+    Iterable<Driveway> drivewaysAll = driveways.findAll();
+        for (Driveway driveway : drivewaysAll) {
+            if (driveway.getAddress() == null || driveway.getLat() == null || driveway.getLng() == null){
                 GeoApiContext context = new GeoApiContext()
                         .setApiKey(" ");
-                TextSearchRequest request = PlacesApi.textSearchQuery(context, drive.getAddressInput() + " Charleston");
+                TextSearchRequest request = PlacesApi.textSearchQuery(context, driveway.getname() + " Charleston");
                 PlacesSearchResponse results = request.await();
-                if (drive.getLat() == null){
-                    drive.setLat(results.results[0].geometry.location.lat);
+                if (driveway.getLat() == null){
+                    driveway.setLat(results.results[0].geometry.location.lat);
                 }
-                if (drive.getLng() == null ) {
-                    drive.setLng(results.results[0].geometry.location.lng);
+                if (driveway.getLng() == null ) {
+                    driveway.setLng(results.results[0].geometry.location.lng);
                 }
-                if (drive.getAddress() == null) {
-                    drive.setAddress(results.results[0].formattedAddress);
+                if (driveway.getAddress() == null) {
+                    driveway.setAddress(results.results[0].formattedAddress);
                 }
-                driveways.save(drive);
+                driveways.save(driveway);
             }
     }
 
@@ -132,7 +131,7 @@ public class DriveWaySharingAppController {
 
     @RequestMapping(path = "/parkingspots", method = RequestMethod.POST)
 
-    public void addItinerary(HttpSession session, @RequestBody HashMap data) throws Exception {
+    public void addParking(HttpSession session, @RequestBody HashMap data) throws Exception {
         String username = (String) session.getAttribute("username");
         if (username == null) {
             throw new Exception("You must be registered");
@@ -140,9 +139,9 @@ public class DriveWaySharingAppController {
 
         Park park = new Park();
         User user = users.findByUsername(username);
-        String addressInput = (String) data.get("addressInput");
-        Driveway temp = driveways.findFirstByAddressInput(addressInput);
-        if (driveways.findFirstByAddressInput(addressInput)==null) {
+        String name = (String) data.get("name");
+        Driveway temp = driveways.findFirstByName(name);
+        if (driveways.findFirstByName(name)==null) {
             park.setDrive(false);
             int id = (int) data.get("id");
             park.setEventId(id);
@@ -170,7 +169,7 @@ public class DriveWaySharingAppController {
     }
 
     @RequestMapping (path = "/driveways", method = RequestMethod.GET)
-    public Iterable<Driveway> getDrives () {
+    public Iterable<Driveway> getDrivewaysAll () {
 
         return driveways.findAll();
     }
